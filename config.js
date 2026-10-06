@@ -13,7 +13,7 @@ import os from "os";
 import {fileURLToPath} from "node:url";
 import fs from "fs";
 
-export const version = "0.5.1131";
+export const version = "0.5.1198";
 export const baseURL = "https://updater.kogiqa.com/release";
 export const preferredPort = 4239;
 
