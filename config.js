@@ -21,6 +21,7 @@ export const preferredPort = 4239;
 export const baseDirname = path.join(os.homedir(), ".kogiqa-mcp");
 export const npxDirname = path.dirname(fileURLToPath(import.meta.url));
 export const extractedPath = path.join(baseDirname, "kogiqa-extracted");
+export const installedVersionFile = path.join(baseDirname, "installed-version.txt");
 
 if (!fs.existsSync(baseDirname)) {
     fs.mkdirSync(baseDirname, {recursive: true});

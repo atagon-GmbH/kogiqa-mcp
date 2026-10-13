@@ -15,9 +15,9 @@ import { detectGlobalAgents, upsertServer } from "add-mcp";
 
         for (const agent of globalAgents) {
             try {
-                await upsertServer(agent, "kogiQA-mcp-browser", {
+                await upsertServer(agent, "kogiqa-browser", {
                     command: "npx",
-                    args: ["-y", "kogiqa-mcp"],
+                    args: ["-y", "kogiqa-mcp@latest"],
                 });
                 console.log(`✅ Successfully configured: ${agent}`);
             } catch (err) {

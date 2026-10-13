@@ -7,6 +7,7 @@
  *
  *
  */
+import fs from "fs";
 import net from "net";
 import path from "path";
 import {execSync} from "child_process";
@@ -47,7 +48,7 @@ export function getRandomFreePort() {
 export async function waitForHttpServer(url, retries = 50) {
     for (let i = 0; i < retries; i++) {
         try {
-            await fetch(url);
+            await fetch(url, {signal: AbortSignal.timeout(2000)});
             return;
         } catch (e) {
             await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -92,8 +93,33 @@ export function getAppBinPath(extractedPath) {
 export function extractZip(zipPath, extractedPath) {
     console.error(`[Proxy] Extracting ZIP ${zipPath} to ${extractedPath}...`);
     if (process.platform === "win32") {
-        execSync(`powershell -command "Expand-Archive -Force -Path '${zipPath}' -DestinationPath '${extractedPath}'"`, {stdio: 'inherit'});
+        execSync(`powershell -command "Expand-Archive -Force -Path '${zipPath}' -DestinationPath '${extractedPath}'"`, {stdio: ['ignore', 'ignore', 'inherit']});
     } else {
         execSync(`unzip -o "${zipPath}" -d "${extractedPath}"`, {stdio: 'ignore'});
+    }
+}
+
+
+// When launched with `sudo`, SUDO_UID/SUDO_GID identify the invoking user.
+// Chown what we create to them so a later non-root run can remove and replace it.
+export function restoreOwnership(targetPath) {
+    if (typeof process.getuid !== "function" || process.getuid() !== 0) {
+        return;
+    }
+
+    const uid = Number.parseInt(process.env.SUDO_UID ?? "", 10);
+    const gid = Number.parseInt(process.env.SUDO_GID ?? "", 10);
+    if (!Number.isInteger(uid) || !Number.isInteger(gid) || !fs.existsSync(targetPath)) {
+        return;
+    }
+
+    fs.chownSync(targetPath, uid, gid);
+    for (const entry of fs.readdirSync(targetPath, {withFileTypes: true})) {
+        const entryPath = path.join(targetPath, entry.name);
+        if (entry.isDirectory() && !entry.isSymbolicLink()) {
+            restoreOwnership(entryPath);
+        } else {
+            fs.lchownSync(entryPath, uid, gid);
+        }
     }
 }

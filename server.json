@@ -1,9 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.atagon/kogiqa-mcp",
-  "title": "kogiQA MCP Web Browser",
+  "title": "Web Browser (kogiQA)",
   "description": "This web browser has been designed to help your agent debug and develop complex web applications.",
-  "version": "1.3.40",
+  "version": "1.3.103",
   "homepage": "https://kogiqa.com",
   "repository": {
     "url": "https://github.com/atagon-GmbH/kogiqa-mcp",
@@ -17,7 +17,8 @@
     {
       "registryType": "npm",
       "identifier": "kogiqa-mcp",
-      "version": "1.3.40",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "version": "1.3.103",
       "transport": {
         "type": "stdio"
       }

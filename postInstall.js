@@ -9,8 +9,8 @@
  *
  */
 
-import downloadeBinary from "./downloadeBinary.js";
+import {ensureBinary} from "./downloadeBinary.js";
 import autoRegisterMCP from "./autoRegister.js";
 
 await autoRegisterMCP()
-await downloadeBinary()
+await ensureBinary()
